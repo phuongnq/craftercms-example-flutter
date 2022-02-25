@@ -1,0 +1,18 @@
+h1 {
+  text-align: center;
+  padding: 30px;
+}
+.backgroud {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #fafafa;
+  padding: 100px 0;
+  margin: 0;
+  font-weight: bold;
+  text-align: center;
+}
+
+h2 {
+  color: white;
+}
