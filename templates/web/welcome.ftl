@@ -30,20 +30,7 @@
 <main>
   <h1>Readme</h1>
   <ol>
-    <li>
-      In the CrafterCMS site sandbox directory, you'll find a directory called
-      app, which is the Angular app. Visit that directory on your terminal and run `yarn`
-    </li>
-    <li>
-      Create a copy of <em>app/src/environments/environment.ts.sample</em> to produce <em>app/src/environments/environment.ts</em>.
-      If you named your site <strong>angular-sample</strong> and CrafterCMS is running on <strong>localhost:8080</strong>,
-      no further edits are necessary; otherwise, change the file accordingly.
-    </li>
-    <li>Run `ng serve` to start the node server on localhost:4200</li>
-    <li>Open Site Tools and select "Configuration"</li>
-    <li>Search for "Proxy Config"</li>
-    <li>Comment line 58 and uncomment line 59</li>
-    <li>Close the pop-up and refresh the page. You'll now see the Angular application in this area.</li>
+    TBD
   </ol>
 </main>
 <@crafter.body_bottom/>
