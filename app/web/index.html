@@ -31,6 +31,8 @@
 
   <title>app</title>
   <link rel="manifest" href="manifest.json">
+  <script src="http://localhost:8080/studio/static-assets/scripts/craftercms-guest.umd.js"></script>
+  <script src="js/app.js"></script>
 </head>
 <body>
   <!-- This script installs service_worker.js to provide PWA functionality to
@@ -99,6 +101,9 @@
       // Service workers not supported. Just drop the <script> tag.
       loadMainDartJs();
     }
+  </script>
+  <script>
+    loadIce();
   </script>
 </body>
 </html>
