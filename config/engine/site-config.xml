@@ -25,7 +25,7 @@
   <cors>
     <enable>true</enable>
     <accessControlMaxAge>3600</accessControlMaxAge>
-    <accessControlAllowOrigin>http://localhost:4200</accessControlAllowOrigin>
+    <accessControlAllowOrigin>http://localhost:3000</accessControlAllowOrigin>
     <accessControlAllowMethods>GET\, POST\, PUT\, OPTIONS</accessControlAllowMethods>
     <accessControlAllowHeaders>Content-Type</accessControlAllowHeaders>
     <accessControlAllowCredentials>true</accessControlAllowCredentials>
