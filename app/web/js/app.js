@@ -12,7 +12,10 @@ function loadIce() {
       script.src = 'http://localhost:8080/studio/static-assets/scripts/craftercms-guest.umd.js';
       document.head.appendChild(script);
 
-      craftercms.guest.initInContextEditing({ path: '/site/website/about/index.xml' });
+      script.addEventListener('load', function() {
+        console.log('guest script is loaded');
+        craftercms.guest.initInContextEditing({ path: '/site/website/about/index.xml' });
+      });
     }
   }, 6000);
 }
