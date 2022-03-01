@@ -14,12 +14,13 @@ const FIXED_ATTRIBUTES = {
 function initICE(path) {
   let elm = document.querySelector('flt-glass-pane');
   if (elm) {
+    console.log(elm);
     const attributes = FIXED_ATTRIBUTES[path];
     for (let i = 0; i < Object.keys(attributes).length; i++) {
       const key = Object.keys(attributes)[i];
       const value = attributes[key];
       elm.setAttribute(key, value);
     }
-    craftercms.guest.initInContextEditing({ path: attributes['data-craftercms-model-path'] });
+    craftercms.xb.initInContextEditing({ path: attributes['data-craftercms-model-path'] });
   }
 }

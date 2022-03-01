@@ -72,7 +72,7 @@ class AboutPage extends StatefulWidget {
   }
 
   Widget build(BuildContext context) {
-    js.context.callMethod('initICE', ['/about']);
+    // js.context.callMethod('initICE', ['/about']);
     return Scaffold(
       appBar: AppBar(
         title: const Text('About Us'),
