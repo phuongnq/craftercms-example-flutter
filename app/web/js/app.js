@@ -1,21 +1,25 @@
-function loadIce() {
-  setTimeout(() => {
-    let elm = document.querySelector('flt-glass-pane').shadowRoot.querySelector('canvas');
-    console.log(elm);
-    if (elm) {
-      elm.setAttribute('data-craftercms-model-id', 'f2502f10-30a3-4308-6a8c-e79356219b00');
-      elm.setAttribute('data-craftercms-model-path', '/site/website/about/index.xml');
-      elm.setAttribute('data-craftercms-field-id', 'title_s');
-      elm.setAttribute('data-craftercms-label', 'About');
+const FIXED_ATTRIBUTES = {
+  '/': {
+    "data-craftercms-model-id": "8d7f21fa-5e09-00aa-8340-853b7db302da",
+    "data-craftercms-model-path": "/site/website/index.xml",
+    "data-craftercms-label": "Home"
+  },
+  '/about': {
+    "data-craftercms-model-id": "f2502f10-30a3-4308-6a8c-e79356219b00",
+    "data-craftercms-model-path": "/site/website/about/index.xml",
+    "data-craftercms-label": "About"
+  }
+}
 
-      const script = document.createElement('script');
-      script.src = 'http://localhost:8080/studio/static-assets/scripts/craftercms-guest.umd.js';
-      document.head.appendChild(script);
-
-      script.addEventListener('load', function() {
-        console.log('guest script is loaded');
-        craftercms.guest.initInContextEditing({ path: '/site/website/about/index.xml' });
-      });
+function initICE(path) {
+  let elm = document.querySelector('flt-glass-pane');
+  if (elm) {
+    const attributes = FIXED_ATTRIBUTES[path];
+    for (let i = 0; i < Object.keys(attributes).length; i++) {
+      const key = Object.keys(attributes)[i];
+      const value = attributes[key];
+      elm.setAttribute(key, value);
     }
-  }, 6000);
+    craftercms.guest.initInContextEditing({ path: attributes['data-craftercms-model-path'] });
+  }
 }
