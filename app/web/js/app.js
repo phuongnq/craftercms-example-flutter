@@ -14,7 +14,6 @@ const FIXED_ATTRIBUTES = {
 function initICE(path) {
   let elm = document.querySelector('flt-glass-pane');
   if (elm) {
-    console.log(elm);
     const attributes = FIXED_ATTRIBUTES[path];
     for (let i = 0; i < Object.keys(attributes).length; i++) {
       const key = Object.keys(attributes)[i];
