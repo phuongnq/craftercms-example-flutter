@@ -33,7 +33,7 @@ class HomeModel {
   factory HomeModel.fromJson(String path, Map<String, dynamic> json) {
     List<Hero> heros = [];
 
-    if(json['page']['content_o']['item'] != null) {
+    if (json['page'] != null && json['page']['content_o'] != null && json['page']['content_o']['item'] != null) {
       heros = (json['page']['content_o']['item'] as List)
         .map((dynamic item) => Hero.fromJson(item))
         .toList();
