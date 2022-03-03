@@ -18,8 +18,57 @@ const String _authorization = 'Bearer eyJhbGciOiJQQkVTMi1IUzUxMitBMjU2S1ciLCJlbm
 void main() {
   runApp(const MaterialApp(
     title: 'Flutter + CrafterCMS Demo',
-    home: HomePage(),
+    home: MainApp(),
   ));
+}
+
+class MainApp extends StatefulWidget {
+  const MainApp({Key? key}) : super(key: key);
+  @override
+  _MainAppState createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  int _selectedIndex = 0;
+  static const List<Widget> _widgetOptions = <Widget>[
+    HomePage(),
+    AboutPage(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Flutter + CrafterCMS Demo'),
+        ),
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.info),
+              label: 'About',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onItemTapped,
+        ),
+      ),
+    );
+  }
 }
 
 class HomePage extends StatefulWidget {
@@ -70,6 +119,23 @@ class Hero {
   }
 }
 
+class AboutModel {
+  final String navLabel;
+  final String title;
+
+  const AboutModel({
+    required this.navLabel,
+    required this.title,
+  });
+
+  factory AboutModel.fromJson(Map<String, dynamic> json) {
+    return AboutModel(
+      navLabel: json['page']['navLabel'],
+      title: json['page']['title_s'],
+    );
+  }
+}
+
 Future<Hero> fetchHero(String path) async {
   final String url = _baseUrl + _crafterApiGetContent + '?site_id=' + _crafterSite + '&path=' + path;
   final response = await http.get(
@@ -111,6 +177,27 @@ Future<Model> fetchModel(path) async {
   }
 }
 
+Future<AboutModel> fetchAboutModel(path) async {
+  final String url = _baseUrl + _crafterApiGetContent + '?site_id=' + _crafterSite + '&path=' + path;
+  final response = await http.get(
+    Uri.parse(url),
+    headers: {
+      HttpHeaders.authorizationHeader: _authorization,
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final json = jsonDecode(response.body);
+    final transformer = Xml2Json();
+    transformer.parse(json['content']);
+    final content = transformer.toParker();
+    final parsedJson = jsonDecode(content);
+    return AboutModel.fromJson(parsedJson);
+  } else {
+    throw Exception('Failed to load model');
+  }
+}
+
 class _HomePageState extends State<HomePage> {
   late Future<Model> _futureModel;
 
@@ -126,9 +213,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home '),
-      ),
       body: ListView(
         children: [
           Center(
@@ -193,39 +277,50 @@ class AboutPage extends StatefulWidget {
   const AboutPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AboutPageState(this);
-
-  void onLoad(BuildContext context) {
-    // js.context.callMethod('initICE', ['/about']);
-  }
-
-  Widget build(BuildContext context) {
-    // js.context.callMethod('initICE', ['/about']);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('About Us'),
-      ),
-      body: const Center(
-        child: Text(
-          'About Us',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w400,
-          )
-        ),
-      ),
-    );
-  }
+  _AboutPageState createState() => _AboutPageState();
 }
 
 class _AboutPageState extends State<AboutPage> {
-  AboutPage widget;
+  late Future<AboutModel> _futureModel;
 
-  _AboutPageState(this.widget);
-
-  @override
-  Widget build(BuildContext context) => widget.build(context);
+  _AboutPageState();
 
   @override
-  void initState() => widget.onLoad(context);
+  void initState() {
+    super.initState();
+    _futureModel = fetchAboutModel('/site/website/about/index.xml');
+    js.context.callMethod('initICE', ['/about']);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        children: [
+          Center(
+            child: FutureBuilder<AboutModel>(
+              future: _futureModel,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                    children: [
+                      Text(
+                        snapshot.data!.title,
+                        style: Theme.of(context).textTheme.headline4
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+
+                // By default, show a loading spinner.
+                return const CircularProgressIndicator();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
