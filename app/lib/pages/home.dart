@@ -15,14 +15,14 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class Model {
+class HomeModel {
   final String id;
   final String path;
   final String navLabel;
   final String title;
   final List<Hero> heros;
 
-  const Model({
+  const HomeModel({
     required this.id,
     required this.path,
     required this.navLabel,
@@ -30,7 +30,7 @@ class Model {
     required this.heros,
   });
 
-  factory Model.fromJson(String path, Map<String, dynamic> json) {
+  factory HomeModel.fromJson(String path, Map<String, dynamic> json) {
     List<Hero> heros = [];
 
     if(json['page']['content_o']['item'] != null) {
@@ -38,7 +38,7 @@ class Model {
         .map((dynamic item) => Hero.fromJson(item))
         .toList();
     }
-    return Model(
+    return HomeModel(
       id: json['page']['objectId'],
       path: path,
       navLabel: json['page']['navLabel'],
@@ -68,7 +68,7 @@ class Hero {
   }
 }
 
-Future<Model> fetchModel(path) async {
+Future<HomeModel> fetchModel(path) async {
   final String url = craftercms_constants.baseUrl + craftercms_constants.apiDescriptor + '?site_id=' + craftercms_constants.siteName + '&flatten=true&url=' + path;
   final response = await http.get(
     Uri.parse(url)
@@ -77,14 +77,14 @@ Future<Model> fetchModel(path) async {
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
 
-    return Model.fromJson(path, json);
+    return HomeModel.fromJson(path, json);
   } else {
     throw Exception('Failed to load model');
   }
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<Model> _futureModel;
+  late Future<HomeModel> _futureModel;
 
   _HomePageState();
 
@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
       body: ListView(
         children: [
           Center(
-            child: FutureBuilder<Model>(
+            child: FutureBuilder<HomeModel>(
               future: _futureModel,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
