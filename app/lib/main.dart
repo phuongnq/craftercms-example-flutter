@@ -79,19 +79,25 @@ class HomePage extends StatefulWidget {
 }
 
 class Model {
+  final String id;
+  final String path;
   final String navLabel;
   final String title;
   final Hero hero;
 
   const Model({
+    required this.id,
+    required this.path,
     required this.navLabel,
     required this.title,
     required this.hero,
   });
 
-  factory Model.fromJson(Map<String, dynamic> json, Hero hero) {
+  factory Model.fromJson(String path, Map<String, dynamic> json, Hero hero) {
     return Model(
-      navLabel: json['page']['navLabel'] as String,
+      id: json['page']['objectId'],
+      path: path,
+      navLabel: json['page']['navLabel'],
       title: json['page']['title_s'],
       hero: hero,
     );
@@ -120,16 +126,22 @@ class Hero {
 }
 
 class AboutModel {
+  final String id;
+  final String path;
   final String navLabel;
   final String title;
 
   const AboutModel({
+    required this.id,
+    required this.path,
     required this.navLabel,
     required this.title,
   });
 
-  factory AboutModel.fromJson(Map<String, dynamic> json) {
+  factory AboutModel.fromJson(path, Map<String, dynamic> json) {
     return AboutModel(
+      id: json['page']['objectId'],
+      path: path,
       navLabel: json['page']['navLabel'],
       title: json['page']['title_s'],
     );
@@ -171,7 +183,7 @@ Future<Model> fetchModel(path) async {
     final heroPath = parsedJson['page']['content_o']['item']['include'];
     final hero = await fetchHero(heroPath);
 
-    return Model.fromJson(parsedJson, hero);
+    return Model.fromJson(path, parsedJson, hero);
   } else {
     throw Exception('Failed to load model');
   }
@@ -192,7 +204,7 @@ Future<AboutModel> fetchAboutModel(path) async {
     transformer.parse(json['content']);
     final content = transformer.toParker();
     final parsedJson = jsonDecode(content);
-    return AboutModel.fromJson(parsedJson);
+    return AboutModel.fromJson(path, parsedJson);
   } else {
     throw Exception('Failed to load model');
   }
@@ -206,8 +218,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _futureModel = fetchModel('/site/website/index.xml');
-    js.context.callMethod('initICE', ['/']);
+    const path = '/site/website/index.xml';
+    _futureModel = fetchModel(path);
+    Stream.fromFuture(_futureModel).listen((model) {
+      final id = model.id;
+      final label = model.navLabel;
+      js.context.callMethod('initICE', [path, id, label]);
+    });
   }
 
   @override
@@ -288,8 +305,14 @@ class _AboutPageState extends State<AboutPage> {
   @override
   void initState() {
     super.initState();
-    _futureModel = fetchAboutModel('/site/website/about/index.xml');
-    js.context.callMethod('initICE', ['/about']);
+
+    const path = '/site/website/about/index.xml';
+    _futureModel = fetchAboutModel(path);
+    Stream.fromFuture(_futureModel).listen((model) {
+      final id = model.id;
+      final label = model.navLabel;
+      js.context.callMethod('initICE', [path, id, label]);
+    });
   }
 
   @override
