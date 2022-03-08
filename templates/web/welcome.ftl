@@ -30,7 +30,20 @@
 <main>
   <h1>Readme</h1>
   <ol>
-    TBD
+    <li>
+      In the CrafterCMS site sandbox directory, you'll find a directory called
+      app, which is the Flutter app. Visit that directory on your terminal and run `flutter pub get`
+    </li>
+    <li>
+      Update <em>app/lib/constant.dart</em> to your have your Crafter Studio base URL and project name.
+      If you named your project <strong>flutter-sample</strong> and CrafterCMS is running on <strong>localhost:8080</strong>,
+      no further edits are necessary; otherwise, change the file accordingly.
+    </li>
+    <li>Run `flutter run -d chrome --web-renderer html --web-port 3000` to start the node server on localhost:3000</li>
+    <li>Open Site Tools and select "Configuration"</li>
+    <li>Search for "Proxy Config"</li>
+    <li>Comment line 58 and uncomment line 59</li>
+    <li>Close the pop-up and refresh the page. You'll now see the Flutter application in this area.</li>
   </ol>
 </main>
 <@crafter.body_bottom/>
