@@ -69,7 +69,7 @@ class Hero {
 }
 
 Future<HomeModel> fetchModel(path) async {
-  final String url = craftercms_constants.baseUrl + craftercms_constants.apiDescriptor + '?site_id=' + craftercms_constants.siteName + '&flatten=true&url=' + path;
+  final String url = craftercms_constants.baseUrl + craftercms_constants.apiDescriptor + '?crafterSite=' + craftercms_constants.siteName + '&flatten=true&url=' + path;
   final response = await http.get(
     Uri.parse(url)
   );
